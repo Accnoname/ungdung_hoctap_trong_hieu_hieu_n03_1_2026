@@ -1,6 +1,18 @@
-# ungdung_hoctap_trong_hieu_hieu_n03_1_2026
+# Ứng Dụng Học Tập
 
-A new Flutter project.
+Một ứng dụng Flutter được xây dựng cho bài thực hành 01 của Nhóm N03.
+
+## Thành viên nhóm
+
+- **Nguyễn Văn Trọng** - MSSV: 23010748
+- **Trương Bùi Huy Hiếu** - MSSV: 23010885
+- **Nguyễn Trung Hiếu** - MSSV: 23011098
+
+## Nội dung bài thực hành 01
+
+Bài thực hành này yêu cầu các thành viên nhóm:
+1. Thay đổi tiêu đề (Title) của ứng dụng thành tên của ứng dụng
+2. Hiển thị tên và mã sinh viên của các thành viên trong nhóm trên trang chính
 
 ## Getting Started
 
