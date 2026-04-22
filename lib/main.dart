@@ -1,41 +1,44 @@
 import 'package:flutter/material.dart';
 
-// Cau 1: Bien mo ta doi tuong Sach.
-int idSach = 1;
-String tenSach = 'Mobile Dev';
-int soLuong = 10;
-String nxb = 'Giao Duc';
-String namXB = '2026';
+// --- Câu 2 ---
+class DataBox<T> {
+  T obj;
+  DataBox(this.obj);
+}
 
-// Cau 2: Collections (Array/List/Map) cho Nguoi Muon va Sach.
-// Dart khong co kieu Array rieng, su dung List de dong vai tro mang.
-List<String> mangNhaXuatBan = ['Giao Duc', 'Thanh Nien', 'Ollien'];
+// --- Câu 3 ---
+class Book {
+  String id;
+  String title;
+  String author;
+  double price;
 
-Map<String, dynamic> listNguoiMuon = {'id': 1, 'tenNguoiMuon': 'Nguyen Van A'};
+  Book({
+    required this.id,
+    required this.title,
+    required this.author,
+    required this.price,
+  });
+}
 
-List<Map<String, dynamic>> listSach = [
-  {
-    'idSach': 1,
-    'tenSach': 'Mobile Dev',
-    'soLuong': 10,
-    'NXB': 'Giao Duc',
-    'namXB': '2026',
-  },
-  {
-    'idSach': 2,
-    'tenSach': 'Lam quen voi Flutter',
-    'soLuong': 100,
-    'NXB': 'Thanh Nien',
-    'namXB': '2024',
-  },
-  {
-    'idSach': 3,
-    'tenSach': 'Dart Programming',
-    'soLuong': 100,
-    'NXB': 'Ollien',
-    'namXB': '2024',
-  },
-];
+// --- Câu 4 ---
+class ListBook {
+  List<Book> _database = [];
+
+  void create(Book book) {
+    _database.add(book);
+  }
+
+  List<Book> getAll() => _database;
+
+  void edit(String id, String newTitle, double newPrice) {
+    int index = _database.indexWhere((b) => b.id == id);
+    if (index != -1) {
+      _database[index].title = newTitle;
+      _database[index].price = newPrice;
+    }
+  }
+}
 
 void main() {
   runApp(const MyApp());
@@ -44,99 +47,119 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Quan Ly Thu Vien',
+      title: 'Quản Lý Thư Viện',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Bai Tap Thuc Hanh So 2'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
-  final String title;
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  // --- Câu 4 ---
+  final ListBook bookManager = ListBook();
+
+  // --- Câu 2 ---
+  final studentData = DataBox<List<Map<String, String>>>([
+    {'studentID': 's123456', 'fullname': 'Nguyen Thi B'},
+    {'studentID': 's345672', 'fullname': 'Nguyen Van D'},
+    {'studentID': 's923333', 'fullname': 'Tran Thi Van'},
+  ]);
+
+  @override
+  void initState() {
+    super.initState();
+    // --- Câu 4: Create ---
+    bookManager.create(
+      Book(id: "B01", title: "Lập trình Dart", author: "Google", price: 150000),
+    );
+    bookManager.create(
+      Book(id: "B02", title: "Flutter Cơ Bản", author: "FPT", price: 200000),
+    );
+  }
+
+  void _testEdit() {
+    setState(() {
+      // --- Câu 4: Edit ---
+      bookManager.edit("B01", "Dart OOP Nâng Cao", 180000);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Bài Tập Thực Hành'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        title: Text(title),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 4),
+            // --- Câu 2 ---
             const Text(
-              '1) Bien mo ta doi tuong Sach',
-              style: TextStyle(fontWeight: FontWeight.w600),
+              'Câu 2: Generic Class DataBox',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 8),
-            Text('idSach: $idSach'),
-            Text('tenSach: $tenSach'),
-            Text('soLuong: $soLuong'),
-            Text('NXB: $nxb'),
-            Text('namXB: $namXB'),
-            const SizedBox(height: 20),
-            const Text(
-              '2) Collections - Nguoi Muon (Map)',
-              style: TextStyle(fontWeight: FontWeight.w600),
+            ...studentData.obj.map(
+              (s) => Text('ID: ${s['studentID']} - Tên: ${s['fullname']}'),
             ),
-            const SizedBox(height: 8),
+
+            const Divider(height: 32),
+
+            // --- Câu 4: Read & Edit UI ---
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: Text('ID: ${listNguoiMuon['id']}')),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Ten nguoi muon: ${listNguoiMuon['tenNguoiMuon']}',
-                  ),
+                const Text(
+                  'Câu 4: CRUD ListBook',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _testEdit,
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Sửa sách B01'),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            const Text(
-              '3) Collections - Danh sach Sach (List<Map>)',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            ...listSach.map(
-              (sach) => Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(child: Text('idSach: ${sach['idSach']}')),
-                          Expanded(child: Text('soLuong: ${sach['soLuong']}')),
-                        ],
-                      ),
-                      Text('tenSach: ${sach['tenSach']}'),
-                      Text('NXB: ${sach['NXB']}'),
-                      Text('namXB: ${sach['namXB']}'),
-                    ],
+            const SizedBox(height: 12),
+
+            // --- Câu 4: Read ---
+            ...bookManager.getAll().map(
+              (book) => Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  leading: CircleAvatar(child: Text(book.id)),
+                  title: Text(
+                    book.title,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  subtitle: Text('Tác giả: ${book.author}'),
+                  trailing: Text(
+                    '${book.price.toInt()}đ',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              '4) Collections - Mang Nha Xuat Ban (Array/List)',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            ...mangNhaXuatBan.map((nxbItem) => Text('- $nxbItem')),
           ],
         ),
       ),
